@@ -4,6 +4,7 @@ import 'package:quiz/models/question_model.dart';
 import 'package:quiz/widgets/next_button.dart';
 import 'package:quiz/widgets/option_card.dart';
 import 'package:quiz/widgets/question_widget.dart';
+import 'package:quiz/widgets/result_box.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -39,17 +40,24 @@ class _HomeScreenState extends State<HomeScreen> {
   int index = 0;
   int score = 0;
   bool isPressed = false;
-  bool isAlreadySelected =false;
+  bool isAlreadySelected = false;
 
   void nextQuestion() {
     if (index == _questions.length - 1) {
-      return;
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (ctx) => ResultBox(
+          result: score,
+          questionLength: _questions.length,
+        ),
+      );
     } else {
       if (isPressed) {
         setState(() {
           index++;
           isPressed = false;
-          isAlreadySelected =false;
+          isAlreadySelected = false;
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -64,18 +72,17 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void checkAnswerAndUpdate(bool value) {
-    if(isAlreadySelected){
+    if (isAlreadySelected) {
       return;
-    }else {
+    } else {
       if (value == true) {
-      score++;
-      setState(() {
-        isPressed = true;
-        isAlreadySelected =true;
-      });
+        score++;
+        setState(() {
+          isPressed = true;
+          isAlreadySelected = true;
+        });
+      }
     }
-    }
-    
   }
 
   @override
