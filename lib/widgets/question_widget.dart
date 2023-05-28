@@ -9,7 +9,7 @@ class QuestionWidget extends StatelessWidget {
     required this.question,
     required this.indexAction,
     required this.totalQuestions,
-  });
+  }) : super(key: key);
 
   final String question;
   final int indexAction;

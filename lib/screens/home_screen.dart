@@ -1,44 +1,73 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:quiz/constants.dart';
 import 'package:quiz/models/question_model.dart';
+import 'package:quiz/widgets/next_button.dart';
+import 'package:quiz/widgets/option_card.dart';
 import 'package:quiz/widgets/question_widget.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  List<Question> _questions = [
+    Question(
+      id: '10',
+      title: 'Apa manfaat sayur bayam',
+      options: {
+        'enak': false,
+        'gakenak': true,
+        'protein': false,
+        'yuks': false
+      },
+    ),
+    Question(
+      id: '11',
+      title: 'Apa manfaat sayur kangkung',
+      options: {
+        'enak': false,
+        'gakenak': false,
+        'protein': true,
+        'yuks': false
+      },
+    )
+  ];
+
+  int index = 0;
+  bool isPressed = false;
+
+  void nextQuestion() {
+    if (index == _questions.length - 1) {
+      return;
+    } else {
+      if (isPressed) {
+        setState(() {
+          index++;
+          isPressed = false;
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('please select any option'),
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.symmetric(vertical: 20),
+          ),
+        );
+      }
+    }
+  }
+
+  void changeColor() {
+    setState(() {
+      isPressed = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<Question> _questions = [
-      Question(
-        id: '10',
-        title: 'Apa manfaat sayur bayam',
-        options: {
-          'enak': false,
-          'gakenak': false,
-          'protein': true,
-          'yuks': false
-        },
-      ),
-      Question(
-        id: '11',
-        title: 'Apa manfaat sayur kangkung',
-        options: {
-          'enak': false,
-          'gakenak': false,
-          'protein': true,
-          'yuks': false
-        },
-      )
-    ];
-
-    int index = 0;
     return Scaffold(
       backgroundColor: background,
       appBar: AppBar(
@@ -61,9 +90,29 @@ class _HomeScreenState extends State<HomeScreen> {
             Divider(
               color: neutral,
             ),
+            SizedBox(
+              height: 25,
+            ),
+            for (int i = 0; i < _questions[index].options.length; i++)
+              OptionCard(
+                option: _questions[index].options.keys.toList()[i],
+                color: isPressed
+                    ? _questions[index].options.values.toList()[i] == true
+                        ? correct
+                        : incorrect
+                    : neutral,
+                onTap: changeColor,
+              ),
           ],
         ),
       ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: NextButton(
+          nextQuestion: nextQuestion,
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
