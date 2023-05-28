@@ -13,4 +13,11 @@ class DBconnect {
           'options': question.options,
         }));
   }
+
+  Future<void> fetchQuestions()async{
+    http.get(url).then((response) {
+      var data = json.decode(response.body);
+      print(data);
+    });
+  }
 }
