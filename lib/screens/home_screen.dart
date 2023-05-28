@@ -50,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (ctx) => ResultBox(
           result: score,
           questionLength: _questions.length,
+          onPressed: startOver,
         ),
       );
     } else {
@@ -77,12 +78,22 @@ class _HomeScreenState extends State<HomeScreen> {
     } else {
       if (value == true) {
         score++;
-        setState(() {
-          isPressed = true;
-          isAlreadySelected = true;
-        });
       }
+      setState(() {
+        isPressed = true;
+        isAlreadySelected = true;
+      });
     }
+  }
+
+  void startOver() {
+    setState(() {
+      index = 0;
+      score = 0;
+      isPressed = false;
+      isAlreadySelected = false;
+    });
+    Navigator.pop(context);
   }
 
   @override
